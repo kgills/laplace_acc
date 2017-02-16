@@ -26,8 +26,8 @@
 #include <sys/time.h>
 
 // size of plate
-#define COLUMNS    1024
-#define ROWS       1024
+#define COLUMNS    16384
+#define ROWS       COLUMNS 
 
 // largest permitted change in temp (This value takes about 3400 steps)
 #define MAX_TEMP_ERROR          0.01
@@ -43,7 +43,7 @@ void track_progress(int iter);
 
 int main(int argc, char *argv[]) {
 
-    int i, j;                                            // grid indexes
+    int i, j, cores;                                     // grid indexes
     int iteration=0;                                     // current iteration
     double dt=100;                                       // largest change in t
     double etime;
@@ -51,16 +51,17 @@ int main(int argc, char *argv[]) {
     struct timeval start_time, stop_time, elapsed_time;  // timers
 
     initialize();                   // initialize Temp_last including boundary conditions
+    cores = acc_get_num_devices(acc_get_device_type());
 
     gettimeofday(&start_time,NULL); // Unix timer
 
 
     // do until error is minimal or until max steps
-    // #pragma acc data copy(Temperature_last), create(Temperature)
+    #pragma acc data copy(Temperature_last), create(Temperature)
     while (dt > MAX_TEMP_ERROR && iteration < MAX_ITERATIONS) {
 
         // main calculation: average my four neighbors
-        // #pragma acc kernels
+        #pragma acc kernels
         for(i = 1; i <= ROWS; i++) {
             for(j = 1; j <= COLUMNS; j++) {
                 Temperature[i][j] = 0.25 * (Temperature_last[i+1][j] + Temperature_last[i-1][j] +
@@ -71,7 +72,7 @@ int main(int argc, char *argv[]) {
         dt = 0.0; // reset largest temperature change
 
         // copy grid to old grid for next iteration and find latest dt
-        // #pragma acc kernels
+        #pragma acc kernels
         for(i = 1; i <= ROWS; i++){
             for(j = 1; j <= COLUMNS; j++){
                 dt = fmax( fabs(Temperature[i][j]-Temperature_last[i][j]), dt);
@@ -80,10 +81,10 @@ int main(int argc, char *argv[]) {
         }
 
         // periodically print test values
-        if((iteration % 100) == 0) {
+        // if((iteration % 100) == 0) {
             // #pragma acc update host(Temperature)
-            track_progress(iteration);
-        }
+            // track_progress(iteration);
+        // }
 
        iteration++;
     }
@@ -94,7 +95,7 @@ int main(int argc, char *argv[]) {
 
     etime = elapsed_time.tv_sec+elapsed_time.tv_usec/1000000.0;
     flops = ((double)iteration*(double)ROWS*(double)COLUMNS*(double)5.0)/etime;
-    printf("%d, %d, %f, %f, %d\n",iteration, ROWS, etime, flops, 1);
+    printf("%d, %d, %f, %f, %d\n",iteration, ROWS, etime, flops, cores);
     return 0;
 }
 
