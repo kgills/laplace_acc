@@ -1,7 +1,7 @@
 CC=pgcc
-C_FLAGS=-acc -O4 -ta=tesla:8.0 -Munroll -mcmodel=medium
+C_FLAGS=-acc -O4 -ta=tesla,8.0 -Munroll -mcmodel=medium
 # C_FLAGS+=-Minfo=accel 
-OUTPUT=laplace_16384.out
+OUTPUT=laplace_debug.out
 
 all: laplace.c
 	$(CC) $(C_FLAGS) $^ -o $(OUTPUT) $(L_FLAGS)

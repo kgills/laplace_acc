@@ -26,7 +26,7 @@
 #include <sys/time.h>
 
 // size of plate
-#define COLUMNS    16384
+#define COLUMNS    2048
 #define ROWS       COLUMNS 
 
 // largest permitted change in temp (This value takes about 3400 steps)

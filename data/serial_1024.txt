@@ -1,0 +1,2 @@
+iterations, matrix_dim, etime, flops, cores
+3376, 1024, 6.767905, 2615279452.060867, 1
