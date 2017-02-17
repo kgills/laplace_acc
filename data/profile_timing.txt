@@ -1,0 +1,31 @@
+[gillespi@gpu002 laplace_acc_debug]$ ./laplace_debug.out
+3488, 2048, 4.631465, 15793849626.414103, 4
+
+Accelerator Kernel Timing data
+/home/gillespi/Workspace/laplace_acc_debug/laplace.c
+  main  NVIDIA  devicenum=0
+    time(us): 4,083,049
+    60: data region reached 2 times
+        60: data copyin transfers: 3
+             device time(us): total=5,463 max=2,711 min=46 avg=1,821
+        92: data copyout transfers: 3
+             device time(us): total=5,455 max=2,869 min=57 avg=1,818
+    64: compute region reached 3488 times
+        66: kernel launched 3488 times
+            grid: [64x512]  block: [32x4]
+             device time(us): total=1,630,390 max=476 min=465 avg=467
+            elapsed time(us): total=1,747,887 max=747 min=491 avg=501
+    75: compute region reached 3488 times
+        75: data copyin transfers: 3488
+             device time(us): total=25,603 max=303 min=3 avg=7
+        77: kernel launched 3488 times
+            grid: [64x512]  block: [32x4]
+             device time(us): total=2,109,908 max=617 min=603 avg=604
+            elapsed time(us): total=2,218,808 max=1,728 min=626 avg=636
+        77: reduction kernel launched 3488 times
+            grid: [1]  block: [256]
+             device time(us): total=230,281 max=76 min=65 avg=66
+            elapsed time(us): total=332,169 max=561 min=86 avg=95
+        77: data copyout transfers: 3488
+             device time(us): total=75,949 max=369 min=14 avg=21
+

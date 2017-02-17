@@ -1,14 +1,17 @@
 library(Hmisc)
 
-core_all = read.csv("../data/static_core_all.txt")
-perf_28 = read.csv("../data/large_28.txt")
+k80_2048 = read.csv("../data/k80_2048_4.txt")
+k80_4096 = read.csv("../data/k80_4096_4.txt")
+k80_8192 = read.csv("../data/k80_8192_4.txt")
+k80_16384 = read.csv("../data/k80_16384_4.txt")
 
 # Convert FLOPS to GFLOPS
-core_all$flops = core_all$flops /1000000000
-perf_28$flops = perf_28$flops/1000000000
+k80_2048$flops = k80_2048$flops /1000000000
+k80_4096$flops = k80_4096$flops /1000000000
+k80_8192$flops = k80_8192$flops /1000000000
+k80_16384$flops = k80_16384$flops /1000000000
 
-# Adjust the serial execution time
-# core_all$flops[core_all$cores == "1"]<-2.0
+# TODO: Add the serial dataframes
 
 # Aggregate the cores and mean flops
 core_flops_ag = aggregate(flops~cores, core_all, mean)
